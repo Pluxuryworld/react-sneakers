@@ -182,8 +182,7 @@ border-bottom: 1px solid #d4d4d4;
   border: 1px solid #a7a7a7;
   color: #000000;
   font-size: 30px;
-  font-weight: 500;
-  text-shadow: #000 1px 0 0px, #000 0 1px 0px, #000 -1px 0 0px, #000 0 -1px 0px;
+  font-weight: 700;
   cursor: pointer;
   transition: background 0.2s ease-in-out;
 
@@ -191,11 +190,11 @@ border-bottom: 1px solid #d4d4d4;
   
   &:hover {
     
-    background: lighten($color: #68dd32, $amount: 5%);
+    background: lighten($color: #D6AB7f, $amount: 5%);
   }
 
   &:active {
-    background: darken($color: #68dd32, $amount: 10%);
+    background: darken($color: #D6AB7f, $amount: 10%);
   }
 }
 
