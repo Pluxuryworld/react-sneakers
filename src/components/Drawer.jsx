@@ -1,4 +1,35 @@
+import Info from "./Info";
+import {useContext, useState} from "react";
+import axios from "axios";
+import AppContext from "../context";
+
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 function Drawer({onClose, removeItem, items = []}) {
+    const [isOrderComplete, setIsOrderComplete] = useState(false);
+    const {cartItems ,setCartItems} = useContext(AppContext)
+
+    const onClickOrder = async () => {
+
+        try{
+            axios.post("https://6513e6498e505cebc2ea52fd.mockapi.io/orders", cartItems);
+
+            setIsOrderComplete(true);
+            setCartItems([]);
+
+
+            for (let i = 0; i < cartItems.length; i++) {
+                const item = cartItems[i];
+                await axios.delete('/cart/' + item.id);
+                await delay(1000);
+            }
+        }catch (err){
+            alert("Error: error creating your order");
+        }
+    }
+
+
     return (
         <div className="overlay">
             <div className="drawer">
@@ -41,20 +72,12 @@ function Drawer({onClose, removeItem, items = []}) {
                                     <b>1000 UAH</b>
                                 </li>
                             </ul>
-                            <button className="greenButton">APPLY ORDER
+                            <button onClick={onClickOrder} className="greenButton">APPLY ORDER
                                 <img width={30} height={30} src="img/arrow.svg" alt="arrow"/></button>
                         </div>
                     </div>
                 ) : (
-                    <div className="cartEmpty d-flex align-center justify-center flex-column flex">
-                        <img className="mb-20" width="120px" height="120px" src="/img/empty-cart.svg" alt="Empty"/>
-                        <h2>Cart is empty</h2>
-                        <p className="opacity-6">Add at least one pair</p>
-                        <button onClick={onClose} className="greenButton">
-                            <img width="30px" height="30px" src="/img/arrow.svg" alt="Arrow"/>
-                            Back to sneakers
-                        </button>
-                    </div>
+                    <Info title={isOrderComplete ? "Order apply" : "Cart is empty"} description={isOrderComplete ? "Wait for your order" :"Add at least one pair"} image={isOrderComplete ? "./img/complite-order.png" :"./img/empty-cart.svg"}/>
                 )}
             </div>
         </div>
