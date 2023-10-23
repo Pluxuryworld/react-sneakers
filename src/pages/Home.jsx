@@ -12,15 +12,16 @@ function Home({
                   isLoading,
               }) {
 
-    const {isItemAdded} = useContext(AppContext);
+    const {isItemAdded, getFavoriteIdItem} = useContext(AppContext);
 
     const renderItems = () => {
         const filteredItems = items.filter(item =>
             item.title.toLowerCase().includes(searchValue.toLowerCase()))
-        return (isLoading ? [...Array(8)] : filteredItems)
+        return (isLoading ? [...Array(10)] : filteredItems)
             .map((item, index) => (
                 <Card
                     key={index}
+                    favoriteId={getFavoriteIdItem(item && item.id)}
                     onFavorite={(obj) => onAddToFavorite(obj)}
                     onPlus={(obj) => onAddToCart(obj)}
                     added={isItemAdded(item && item.id)}
@@ -29,7 +30,6 @@ function Home({
                 />
             ))
     }
-
 
     return (
         <div className="content  p-40">
@@ -42,7 +42,7 @@ function Home({
                 </div>
             </div>
 
-            <div className="d-flex flex-wrap justify-around">
+            <div className="d-flex flex-wrap">
                 {renderItems()}
             </div>
 

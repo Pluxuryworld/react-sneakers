@@ -1,21 +1,26 @@
 .card {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
   border: 1px solid #a7a7a7;
   padding: 25px;
-  width: 200px;
+  width: calc(20% - 60px);
   height: 292px;
   border-radius: 40px;
   margin: 30px;
   transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
-
 
   .plus {
     margin: 3px;
     cursor: pointer;
     width: 35px;
     height: 35px;
+  }
+
+  .disabledPlus {
+   opacity: 0.5;
+    cursor: inherit;
   }
 
   &:hover {
@@ -26,7 +31,6 @@
   .favorite {
     width: 20px;
     height: 20px;
-    position: absolute;
     cursor: pointer;
   }
 

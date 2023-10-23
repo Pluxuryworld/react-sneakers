@@ -1,33 +1,33 @@
 import Info from "./Info";
-import {useContext, useState} from "react";
+import {useState} from "react";
 import axios from "axios";
-import AppContext from "../context";
+import {useCart} from "../hooks/useCart";
 
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function Drawer({onClose, removeItem, items = []}) {
     const [isOrderComplete, setIsOrderComplete] = useState(false);
-    const {cartItems ,setCartItems} = useContext(AppContext)
+    const {cartItems ,setCartItems, totalPrice} = useCart();
+    const [orderId, setOrderId] = useState(null);
 
     const onClickOrder = async () => {
-
-        try{
-            axios.post("https://6513e6498e505cebc2ea52fd.mockapi.io/orders", cartItems);
-
+        try {
+            const { data } = await axios.post('https://6513e6498e505cebc2ea52fd.mockapi.io/orders', {
+                items: cartItems,
+            });
+            setOrderId(data.id);
             setIsOrderComplete(true);
             setCartItems([]);
-
-
             for (let i = 0; i < cartItems.length; i++) {
                 const item = cartItems[i];
-                await axios.delete('/cart/' + item.id);
+                await axios.delete('https://65080dbb56db83a34d9ba7fb.mockapi.io/cart/' + item.id);
                 await delay(1000);
             }
-        }catch (err){
-            alert("Error: error creating your order");
+        } catch (error) {
+            alert('Ошибка при создании заказа :(');
         }
-    }
+    };
 
 
     return (
@@ -52,7 +52,7 @@ function Drawer({onClose, removeItem, items = []}) {
                                         <b>{obj.price} UAH</b>
 
                                     </div>
-                                    <img onClick={() => removeItem(obj.id)}
+                                    <img onClick={() => removeItem(obj)}
                                          className="cartItemRemove"
                                          src="img/cancel.svg"
                                          alt="Cancel"/>
@@ -64,12 +64,12 @@ function Drawer({onClose, removeItem, items = []}) {
                                 <li>
                                     <span>Total</span>
                                     <div></div>
-                                    <b> 20000 UAH</b>
+                                    <b> {totalPrice} UAH</b>
                                 </li>
                                 <li>
                                     <span>Shiping</span>
                                     <div></div>
-                                    <b>1000 UAH</b>
+                                    <b>300 UAH</b>
                                 </li>
                             </ul>
                             <button onClick={onClickOrder} className="greenButton">APPLY ORDER
@@ -77,7 +77,7 @@ function Drawer({onClose, removeItem, items = []}) {
                         </div>
                     </div>
                 ) : (
-                    <Info title={isOrderComplete ? "Order apply" : "Cart is empty"} description={isOrderComplete ? "Wait for your order" :"Add at least one pair"} image={isOrderComplete ? "./img/complite-order.png" :"./img/empty-cart.svg"}/>
+                    <Info title={isOrderComplete ? "Order apply" : "Cart is empty"} description={isOrderComplete ? `Number of order${orderId}, w8 for your order` :"Add at least one pair"} image={isOrderComplete ? "./img/complite-order.png" :"./img/empty-cart.svg"}/>
                 )}
             </div>
         </div>
